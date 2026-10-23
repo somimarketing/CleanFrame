@@ -367,7 +367,7 @@ try {
       background: { bg: ['dark', 'light', 'photo'] },
       layout: { layout: ['list', 'dock'], apps: ['icons', 'both', 'text'], controls: ['icons', 'both', 'text'] },
       typography: { font: (await state()).fonts.available },
-      focus: { focus: ['type', 'glass'], material: ['soft', 'frost', 'tint'] }
+      focus: { focus: ['type', 'glass'], material: ['liquid', 'soft', 'frost', 'tint'] }
     };
     for (const [name, axes] of Object.entries(specs)) {
       await group(name);
@@ -478,7 +478,7 @@ try {
     for (const patch of [{ bg: 'dark' }, { bg: 'light' }, { bg: 'photo', layout: 'list', focus: 'type' }]) {
       await look(patch); await group('focus'); const before = await settingsSnapshot();
       const materials = (await radios()).filter(r => r.action.startsWith('choice.material.'));
-      check('Material stays visible but inactive for ' + JSON.stringify(patch), materials.length === 3 && materials.every(r => r.disabled) && materials.some(r => r.action === 'choice.material.tint' && r.checked === 'true'), materials);
+      check('Material stays visible but inactive for ' + JSON.stringify(patch), materials.length === 4 && materials.every(r => r.disabled) && materials.some(r => r.action === 'choice.material.tint' && r.checked === 'true'), materials);
       const focusBefore = (await state()).focusAction;
       await current.locator('[data-action="choice.material.frost"]').click({ force: true });
       check('Inactive Material ignores pointer focus and application', same(await settingsSnapshot(), before) && (await state()).focusAction === focusBefore);
