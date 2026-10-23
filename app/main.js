@@ -48,7 +48,7 @@
   var LOOK_KEYS = ['bg', 'layout', 'apps', 'font', 'controls', 'focus', 'material'];
   var LOOK_VALUES = { bg: ['dark', 'light', 'photo'], layout: ['list', 'dock'], apps: ['icons', 'both', 'text'], font: Object.keys(FONTS).filter(function (id) { return id === 'manrope' || PRIVATE_FONTS.indexOf(id) >= 0; }), controls: ['icons', 'both', 'text'], focus: ['type', 'glass'], material: ['liquid', 'soft', 'frost', 'tint'] };
   var LOOK_NAMES = { bg: 'Background', layout: 'Layout', apps: 'Apps', font: 'Font', controls: 'Home controls', focus: 'Focus', material: 'Material' };
-  var VALUE_NAMES = { dark: 'Dark', light: 'Light', photo: 'Photo', list: 'List', dock: 'Dock', type: 'Type', glass: 'Glass', soft: 'Soft', frost: 'Frost', tint: 'Clear tint', liquid: 'Liquid', icons: 'Icons', both: 'Icons and text', text: 'Text' };
+  var VALUE_NAMES = { dark: 'Dark', light: 'Light', photo: 'Photo', list: 'Wheel', dock: 'Dock', type: 'Type', glass: 'Glass', soft: 'Soft', frost: 'Frost', tint: 'Clear tint', liquid: 'Liquid', icons: 'Icons', both: 'Icons and text', text: 'Text' };
   var UTIL = { art: ['Art Mode', 'art'], apps: ['All apps', 'apps'], arrange: ['Arrange', 'arrange'], settings: ['Settings', 'settings'] };
   var MSG = {
     leave: { title: 'Leave Home?', line: 'Open Samsung Home?', note: '', actions: [['stay', 'Stay'], ['samsung', 'Samsung Home']] }
@@ -1065,8 +1065,12 @@
     if (!metrics || !metrics.digitCell) return text;
     return text.replace(/[0-9]/g, function (digit) { return '<span class="clock-digit">' + digit + '</span>'; });
   }
+  var DAY_NAMES = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+  var MONTH_NAMES = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+  function dateText() { var d = new Date(); return DAY_NAMES[d.getDay()] + ', ' + MONTH_NAMES[d.getMonth()] + ' ' + d.getDate(); }
   function renderCaption(t, hs) {
     var html = '<span class="clock">' + clockHtml() + '</span>';
+    if (S.c.layout === 'list' && t.id !== 'arrange') html += '<span class="cap-date">' + dateText() + '</span>';
     if (S.c.apps !== 'icons' && hs.items[hs.i] && (S.c.layout === 'list' ? photoLabel(hs.items[hs.i].id, false).size < 88 || photoLabel(hs.items[hs.i].id, false).ellipsis : hs.zone === 'apps' && reducedDockLabel(hs.items[hs.i].id))) html += '<span class="cap-line full-name">' + esc(app(hs.items[hs.i].id).name) + '</span>';
     setHTML(caption, html);
   }
@@ -1305,6 +1309,14 @@
     el.style.transformOrigin = (x + width / 2) + 'px ' + (y + height / 2) + 'px';
     el.style.transform = 'translate3d(' + (-x) + 'px,' + (-y) + 'px,0)' + (S.c.bg === 'photo' && !REDUCED_MOTION ? S.c.material === 'tint' ? ' scale(1.04)' : S.c.material === 'liquid' ? ' scale(1.09)' : '' : '');
   }
+  /* Wheel: the focused app holds the centre slot behind a stationary glass plate; neighbours
+     curve right, shrink and fade with distance. Only transform and opacity change. */
+  var WHEEL_CENTER = 468, WHEEL_Y = [0, 146, 252, 334], WHEEL_S = [1, 0.62, 0.46, 0.36], WHEEL_O = [1, 0.62, 0.32, 0.12], WHEEL_X = [0, 22, 60, 108];
+  function wheelPlace(d) {
+    var a = Math.abs(d), k = d < 0 ? -1 : 1;
+    if (a > 3) return { x: 150, y: k * 396, s: 0.3, o: 0 };
+    return { x: WHEEL_X[a], y: k * WHEEL_Y[a], s: WHEEL_S[a], o: WHEEL_O[a] };
+  }
   function renderList(hs) {
     var items = hs.items, n = items.length, compact = hs.mode === 'arrange', pitch = compact ? PH_COMPACT_PITCH : PH_PITCH;
     var anchor = clamp(hs.i, 0, Math.max(0, n - 1)), first, off, width, slot, y, s, label, aw, plateState;
@@ -1323,7 +1335,7 @@
     width = items[anchor] ? listPlateWidth(items[anchor].id, compact) : 360;
     phList.className = 'ph-list' + (compact ? ' is-compact' : '');
     phList.style.height = PH_HEIGHT + 'px';
-    phRows.style.top = (compact ? 72 : 148) + 'px';
+    phRows.style.top = (compact ? 72 : 0) + 'px';
     keyed(phRows, items, function (row, it, i) {
       var typography = photoLabel(it.id, compact), focus = rowFocus && i === anchor, lifted = hs.lifted && i === anchor, markImage, body = '';
       if (S.c.apps !== 'text') body += appMark(app(it.id), S.c.apps === 'icons' ? compact ? 64 : 88 : compact ? 60 : 84, S.c.apps === 'icons' ? compact ? 64 : 88 : compact ? 44 : 64, S.c.apps === 'icons' ? compact ? 52 : 72 : compact ? 42 : 54);
@@ -1338,12 +1350,18 @@
         + (lifted && i === 0 ? ' no-up' : '') + (lifted && i === n - 1 ? ' no-down' : '')
         + (it.kind === 'app' && S.press === it.id ? ' is-press' : '');
       row.style.width = (compact ? listPlateWidth(it.id, compact) : 1200) + 'px'; row.style.height = pitch + 'px';
-      row.style.transform = 'translate3d(0,' + (i * pitch) + 'px,0)';
+      if (compact) { row.style.transform = 'translate3d(0,' + (i * pitch) + 'px,0)'; row.style.opacity = ''; }
+      else {
+        var w = wheelPlace(i - anchor);
+        row.style.transform = 'translate3d(' + w.x + 'px,' + (WHEEL_CENTER - pitch / 2 + w.y) + 'px,0) scale(' + w.s + ')';
+        row.style.opacity = String(w.o);
+        row.style.pointerEvents = w.o ? '' : 'none';
+      }
       row.setAttribute('role', 'button'); row.setAttribute('aria-label', app(it.id).name);
       attrs(row, compact ? 'tile' : 'app', i, compact ? 'arrange.' + (it.kind === 'ph' ? 'placeholder.' : 'tile.') + it.id : 'home.app.' + it.id);
     });
-    phRows.style.transform = 'translate3d(0,' + (-off) + 'px,0)';
-    y = (compact ? PH_COMPACT_TOP + 2 : PH_TOP + 1) + slot * pitch;
+    phRows.style.transform = 'translate3d(0,' + (compact ? -off : 0) + 'px,0)';
+    y = compact ? PH_COMPACT_TOP + 2 + slot * pitch : 72 + WHEEL_CENTER - pitch / 2 + 1;
     plateState = !n || hs.zone === null ? '' : hs.lifted ? 'on-lift' : S.c.focus === 'glass' && rowFocus ? 'on-focus' : S.c.focus === 'glass' && remembered ? 'on-sel' : '';
     renderPhotoPlate(items[anchor] ? items[anchor].id : '', width, compact ? 88 : 134, y, plateState);
     if (compact && !hs.lifted && (hs.zone === 'tiles' || hs.zone === 'act') && items[anchor]) {

@@ -630,3 +630,9 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000}
 /* Somi TV intro: a full-stage overlay that fades away to reveal Home. */
 .intro{position:absolute;left:0;top:0;width:1920px;height:1080px;z-index:60;background:#07070a;display:flex;align-items:center;justify-content:center;will-change:opacity}
 .intro-mark{width:760px;height:auto;overflow:visible;display:block;fill:#fbf8f2}
+/* Wheel (the List layout): rows scale from their left edge; the clock becomes the large anchor on the right. */
+.l-list .ph-list:not(.is-compact) .ph-row{transform-origin:0 50%;transition:transform var(--t) var(--ease),opacity var(--t) linear}
+.stage.l-list:not(.at-arrange) .home .caption .clock{font-size:136px;line-height:140px;font-weight:200;letter-spacing:-.045em;top:0}
+.stage.l-list:not(.at-arrange) .caption{gap:2px}
+.cap-date{font-size:30px;line-height:40px;font-weight:500;letter-spacing:-.012em;white-space:nowrap;opacity:.84}
+.bg-photo.l-list .caption .cap-date{color:var(--tr-ink);text-shadow:var(--tr-shadow)}
