@@ -542,14 +542,14 @@ try {
     } finally { releaseImages(); await current.unroute(pattern); }
   });
   await run('Settings Back cancels a delayed font choice', async () => {
-    await page(); await group('typography'); const before = await settingsSnapshot();
+    await page(); await group('typography'); const before = await settingsSnapshot(), baseFont = (await state()).look.font;
     const held = [], pattern = '**/fonts/newsreader/*';
     let releaseFont;
     const blocked = new Promise(resolve => { releaseFont = resolve; });
     await current.route(pattern, async route => { held.push(route.request().url()); await blocked; await route.continue(); });
     try {
       await choice('font', 'newsreader'); await current.waitForFunction(() => !!ShoreQA.state().pending);
-      check('Loading a font keeps applied typography and its checked choice', same(await settingsSnapshot(), before) && (await radios()).some(r => r.action === 'choice.font.manrope' && r.checked === 'true'));
+      check('Loading a font keeps applied typography and its checked choice', same(await settingsSnapshot(), before) && (await radios()).some(r => r.action === 'choice.font.' + baseFont && r.checked === 'true'));
       await nav('back'); await ready();
       check('Back cancels the font choice and restores Typography focus', same(await settingsSnapshot(), before) && (await state()).focusAction === 'settings.group.typography');
       releaseFont(); await current.waitForLoadState('networkidle');

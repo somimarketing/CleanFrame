@@ -34,5 +34,23 @@
     "bytes": 4394,
     "sha256": "fdfad38143ec470553cae82a1e45320bdd1b9ec70415d37bd0171051d8a4ded8",
     "unchanged_upstream_bytes": true
+  },
+  {
+    "family": "inter",
+    "file": "inter/Inter-Variable-latin.woff2",
+    "source": "https://registry.npmjs.org/@fontsource-variable/inter/-/inter-5.2.5.tgz (files/inter-latin-opsz-normal.woff2)",
+    "accessed": "2026-10-22",
+    "bytes": 73080,
+    "sha256": "94ebe9c247ba14fd314a779358315f3e9dd2356c0e8070f42b208db2d5e21d6a",
+    "unchanged_upstream_bytes": true
+  },
+  {
+    "family": "inter",
+    "file": "inter/OFL.txt",
+    "source": "https://registry.npmjs.org/@fontsource-variable/inter/-/inter-5.2.5.tgz (LICENSE)",
+    "accessed": "2026-10-22",
+    "bytes": 4314,
+    "sha256": "18aabf190848725e2576eefb5c29ba06aac1029d02132252a7f312eac2e50cf3",
+    "unchanged_upstream_bytes": true
   }
 ]
