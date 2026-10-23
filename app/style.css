@@ -597,10 +597,12 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000}
 .is-font-switch .home .ph-name,.is-font-switch .home .clock,.is-font-switch .home .tile .label,.is-font-switch .home .u-label,.is-font-switch .home .app-focus-name,.is-font-switch .home .util-focus-label{animation:font-in 160ms linear}
 @keyframes font-in{from{opacity:0}}
 @media(prefers-reduced-motion:reduce){.is-font-switch .home .ph-name,.is-font-switch .home .clock,.is-font-switch .home .tile .label,.is-font-switch .home .u-label,.is-font-switch .home .app-focus-name,.is-font-switch .home .util-focus-label{animation-duration:120ms}}
-/* Somi TV brand mark: top centre on Dock, stacked above the clock on List. */
-.brand-logo{position:absolute;z-index:3;top:84px;left:898px;width:125px;height:60px;pointer-events:none;opacity:.92;filter:drop-shadow(0 2px 10px rgba(0,0,0,.28))}
+/* Somi TV brand mark: stacked above the clock in both layouts (top-left on Dock, top-right on List). */
+.brand-logo{position:absolute;z-index:3;top:72px;left:140px;width:125px;height:60px;pointer-events:none;opacity:.92;filter:drop-shadow(0 2px 10px rgba(0,0,0,.28))}
 .l-list .brand-logo{left:auto;right:140px;top:72px}
 .l-list .caption{top:150px}
+.l-dock .caption{top:150px}
+.l-dock.at-arrange .brand-logo{display:none}
 .l-list.at-arrange .brand-logo{display:none}
 .bg-light .brand-logo{filter:invert(1);opacity:.78}
 .bg-dark .brand-logo{filter:none;opacity:.78}
@@ -625,3 +627,6 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000}
 .m-liquid .ph-plate::after,.m-liquid .mat::after{box-shadow:inset 0 1.5px 0 rgba(255,255,255,.62),inset 0 -1px 0 rgba(255,255,255,.20),inset 0 0 0 1px rgba(255,255,255,.14),inset 12px 14px 22px -14px rgba(255,255,255,.42),inset -14px -18px 28px -16px rgba(0,0,0,.34)}
 .m-liquid .ph-plate::before,.m-liquid .mat::before{content:"";position:absolute;z-index:1;inset:0;border-radius:inherit;background:radial-gradient(70% 60% at 16% 0%,rgba(255,255,255,.26),rgba(255,255,255,0) 62%),radial-gradient(38% 34% at 94% 100%,rgba(255,255,255,.16),rgba(255,255,255,0) 70%);pointer-events:none}
 .bg-photo.m-liquid .sheet{--plate:rgba(14,12,10,.38);--lift:rgba(14,12,10,.56);--plate-edge:inset 0 1.5px 0 rgba(255,255,255,.34),inset 0 0 0 1px rgba(255,255,255,.10)}
+/* Somi TV intro: a full-stage overlay that fades away to reveal Home. */
+.intro{position:absolute;left:0;top:0;width:1920px;height:1080px;z-index:60;background:#07070a;display:flex;align-items:center;justify-content:center;will-change:opacity}
+.intro-mark{width:760px;height:auto;overflow:visible;display:block;fill:#fbf8f2}

@@ -1,6 +1,21 @@
 /* Bundled gallery and offline appearance parameters. */
 window.CleanFrameWallpapers = [
   {
+    "id": "city",
+    "name": "City lights",
+    "src": "assets/wallpapers/city.jpg",
+    "thumb": "assets/wallpapers/city-thumb.jpg",
+    "tone": "light",
+    "ut": {
+      "tr": "light",
+      "br": "mist"
+    },
+    "frostVeil": 0.2,
+    "listColumn": 0,
+    "dockQuiet": false,
+    "clockMist": false
+  },
+  {
     "id": "misty",
     "name": "Misty coast",
     "src": "assets/wallpapers/misty.jpg",
