@@ -1307,7 +1307,7 @@
   function fieldTransform(el, x, y, width, height) {
     el._placement = { x: x, y: y, width: width, height: height };
     el.style.transformOrigin = (x + width / 2) + 'px ' + (y + height / 2) + 'px';
-    el.style.transform = 'translate3d(' + (-x) + 'px,' + (-y) + 'px,0)' + (S.c.bg === 'photo' && !REDUCED_MOTION ? S.c.material === 'tint' ? ' scale(1.04)' : S.c.material === 'liquid' ? ' scale(1.09)' : '' : '');
+    el.style.transform = 'translate3d(' + (-x) + 'px,' + (-y) + 'px,0)' + (S.c.bg === 'photo' && !REDUCED_MOTION ? S.c.material === 'tint' ? ' scale(1.04)' : '' : '');
   }
   /* Wheel: the focused app holds the centre slot behind a stationary glass plate; neighbours
      curve right, shrink and fade with distance. Only transform and opacity change. */

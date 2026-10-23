@@ -1,5 +1,15 @@
 [
   {
+    "id": "somicity",
+    "name": "Somi City",
+    "src": "assets/wallpapers/somicity.jpg",
+    "thumb": "assets/wallpapers/somicity-thumb.jpg",
+    "pos": "50% 50%",
+    "tone": "light",
+    "credit": "Santy (Somi), generated with Magnific",
+    "source": "Owner-supplied image"
+  },
+  {
     "id": "city",
     "name": "City lights",
     "src": "assets/wallpapers/city.jpg",

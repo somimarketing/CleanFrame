@@ -1,6 +1,21 @@
 /* Bundled gallery and offline appearance parameters. */
 window.CleanFrameWallpapers = [
   {
+    "id": "somicity",
+    "name": "Somi City",
+    "src": "assets/wallpapers/somicity.jpg",
+    "thumb": "assets/wallpapers/somicity-thumb.jpg",
+    "tone": "light",
+    "ut": {
+      "tr": "mist",
+      "br": "mist"
+    },
+    "frostVeil": 0.2,
+    "listColumn": 0,
+    "dockQuiet": false,
+    "clockMist": false
+  },
+  {
     "id": "city",
     "name": "City lights",
     "src": "assets/wallpapers/city.jpg",

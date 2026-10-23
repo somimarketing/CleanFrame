@@ -23,7 +23,7 @@ for filename in ['index.html']:
     source = (app / filename).read_text()
     pattern = r'(?:src|href)=[\"\']([^\"\']+)' if filename.endswith('.html') else r'from\s+[\"\']([^\"\']+)'
     for reference in re.findall(pattern, source):
-        if ':' in reference or reference.startswith('$'):
+        if ':' in reference or reference.startswith(('$', '#')):
             continue
         assert (app / reference).is_file(), 'Missing bundled resource: ' + reference
         if filename.endswith('.js'):
